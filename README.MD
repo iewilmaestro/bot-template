@@ -1,4 +1,5 @@
-#BOT-TEMPLATE
+# BOT-TEMPLATE
 
-[ ] https://rushbitcoin.com
-[ ] https://ltchunt.com/
+### faucetroll
+- [ ] https://rushbitcoin.com
+- [ ]  https://ltchunt.com/
