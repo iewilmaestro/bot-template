@@ -1,0 +1,120 @@
+class FaucetRoll extends Modul {
+	public function h($xml=0){
+		if($xml){
+			$h[] = "x-requested-with: XMLHttpRequest";
+		}
+		$h[] = "cookie: ".$this->Simpan("Cookie");
+		$h[] = "user-agent: ".$this->Simpan("User_Agent");
+		return $h;
+	}
+	public function Dashboard(){
+		$source = self::Curl(host,self::h())[1];
+		if(preg_match("/Just a moment.../",$source)) {
+			return ["status"=>0,"msg"=>"Cloudflare"];
+		}
+		if(preg_match("/firewall/",$source)) {
+			return ["status"=>0,"msg"=>"Firewall"];
+		}
+		$data["status"] = 1;
+		
+		$user = explode('</font>', explode('<font class="text-success">', $source)[1])[0];
+		if(!$user){
+		}
+		$data["user"] = $user;
+		
+		$bal = explode('</b>', explode('<div class="text-primary"><b>', $source)[1])[0];
+		if(!$bal){
+		}
+		$data["bal"] = $bal;
+		
+		$bits = explode('</b>', explode('<div class="text-warning"><b>', $source)[1])[0];
+		if(!$bits){
+		}
+		$data["bits"] = $bits;
+		
+		return $data;
+	}
+	public function Roll(){
+		$source = self::Curl(host,self::h())[1];
+		if(preg_match("/Just a moment.../",$source)) {
+			return ["status"=>0,"msg"=>"Cloudflare"];
+		}
+		if(preg_match("/firewall/",$source)) {
+			return ["status"=>0,"msg"=>"Firewall"];
+		}
+		$data["status"] = 1;
+		
+		$sisa = explode("</span>",explode('<span id="claimTime">',$source)[1])[0];
+		if(!$sisa){
+		}
+		$data["sisa"] = $sisa;
+		
+		$tmr = explode(' ',explode('Claim FREE Bits every ',$source)[1])[0];
+		if(!$tmr){
+			$tmr = explode(' ',explode('Claim free Litoshi every ',$source)[1])[0];
+		}
+		if(is_numeric($tmr)){
+			$data["timer"] = $tmr*60;
+		}
+		$short = explode(' &amp;',explode('<i class="fa fa-exclamation-triangle fa-fw"></i><br />',$source)[1])[0];
+		if(!$short){
+		}
+		$data["short"] = $short;
+		
+		$sitekey = explode('"',explode('data-sitekey="',$source)[1])[0];
+		if(!$sitekey){
+		}
+		$data["sitekey"] = $sitekey;
+		
+		$token = explode("'", explode("var token = '",$source)[1])[0];
+		if(!$token){
+		}
+		$data["token"] = $token;
+		
+		return $data;
+	}
+	public function Roll_Verif($data){
+		return json_decode(self::Curl(host.'system/ajax.php',self::h(),$data)[1],1);
+	}
+	public function Ptc(){
+		$source = self::Curl(host."ptc.html",self::h())[1];
+		if(preg_match("/Just a moment.../",$source)) {
+			return ["status"=>0,"msg"=>"Cloudflare"];
+		}
+		if(preg_match("/firewall/",$source)) {
+			return ["status"=>0,"msg"=>"Firewall"];
+		}
+		$data["status"] = 1;
+		
+		$id = explode('">',explode('<div class="website_block" id="',$source)[1])[0];
+		if(!$id){
+			return ["status"=>0,"msg"=>"Ptc Habis"];
+		}
+		$data["id"] = $id;
+		
+		$key = explode("',",explode("&key=",$source)[1])[0];
+		if(!$key){
+		}
+		$source = self::Curl(host.'surf.php?sid='.$id.'&key='.$key,self::h())[1];
+		
+		if(preg_match('/Session expired!/',$source)){
+			return ["status"=>0,"msg"=>"Session Expired"];
+		}
+		$token = explode("';",explode("var token = '",$source)[1])[0];
+		$data["token"] = $token;
+		$tmr = explode(";",explode('var secs = ',$source)[1])[0];
+		self::tmr($tmr);
+		
+		return $data;
+	}
+	public function Ptc_Captcha(){
+		$dtx = "cID=0&rT=1&tM=light";
+		$r = json_decode(self::Curl(host.'system/libs/captcha/request.php',self::h(1),$dtx)[1],1);
+		$dtx = "cID=0&pC=".($r)[1]."&rT=2";
+		self::Curl(host.'system/libs/captcha/request.php',self::h(1),$dtx,'','',1);
+		return $r[1];
+	}
+	public function Ptc_Verif($data){
+		return json_decode(self::Curl(host.'system/ajax.php',self::h(),$data)[1],1);
+	}
+}
