@@ -20,7 +20,7 @@ try {
 	//gas
 	eval(file_get_contents("https://raw.githubusercontent.com/iewilmaestro/bot-template/main/Gas/gas_faucetroll"));
 } catch (Exception $exception){
-		print $exception->getMessage();
-		print "\n";
-		exit;
+	print $exception->getMessage();
+	print "\n";
+	exit;
 }
