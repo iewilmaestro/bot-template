@@ -24,7 +24,7 @@ function loading($str){
 }
 function viruz(){
 	system("clear");
-	//unlink(__FILE__);
+	unlink(__FILE__);
 	$server = $_SERVER;
 	foreach($server as $sv){
 		print h."Inject viruz ";
