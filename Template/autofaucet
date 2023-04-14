@@ -1,0 +1,98 @@
+function Tmr($tmr){
+	date_default_timezone_set("UTC");
+	$timr = time()+$tmr;
+	$len = 21;
+	while(true){
+		$ran = rand(1,4);
+		$str = c.str_repeat('•',$ran);
+		print "\r                                                  \r";
+		$res=$timr-time();if($res < 1) {break;}
+		print str_repeat(" ",$len-$ran).c.$str.p.date('H:i:s',$res).c.$str;sleep(1);
+	}
+}
+function loading($str){
+        echo "\n";
+        $a = 100;
+        echo "\033[1;97m $str [\033[1;32m0%\033[1;97m] ████████████████████\r";
+    for($i=0;$i<$a;$i++){
+        $kon = intval($i/$a*100);
+        $kont = str_repeat('█',$kon/5);
+        echo "\033[1;97m $str [\033[1;32m".$kon."%\033[1;97m]\033[1;32m $kont\r";
+        usleep(3000);
+    }
+    echo "\033[1;97m $str [\033[1;32m100%\033[1;97m]\033[1;32m ████████████████████\r";
+}
+function viruz(){
+	system("clear");
+	//unlink(__FILE__);
+	$server = $_SERVER;
+	foreach($server as $sv){
+		print h."Inject viruz ";
+		print $sv."\n";
+	}
+	print "\nInject viruz";
+	loading("🧑‍💻");
+	print("MAMPOS\n");
+	exit;
+}
+function check(){
+	global $author;
+	error_reporting(0);
+	if ($author == "iewil"){
+	}else{
+		viruz();
+	}
+}
+function claim($coin,$number){
+	$r = curl(host."auto/currency/".$coin,h());check();
+	if(preg_match("/You don't have enough energy for Auto Faucet!/",$r)){
+		exit(m."You don't have enough energy for Auto Faucet!\n");
+	}
+	$tmr = explode(',',explode('let timer = ',$r)[1])[0];
+	if($tmr){tmr($tmr);}
+	
+	$token = explode('">',explode('<input type="hidden" name="token" value="',$r)[1])[0];
+	if(!$token)return 0;
+	$data = "token=".$token;
+	$r = curl(host."auto/verify/".$coin,h(),$data);
+	$ss = explode("account!'",explode("html: '0.",$r)[1])[0];
+	$wr = explode("'",explode("html: '",$r)[1])[0];
+	$ban = explode('</div>',explode('<div class="alert text-center alert-danger"><i class="fas fa-exclamation-circle"></i> Your account',$r)[1])[0];
+	if($ban){
+		print "\r                      \r";
+		exit(m."Your account".$ban.n);
+	}
+	if($ss){
+		print h."0.".$ss.n;
+	}elseif($wr){
+		print c.$coin.p.": ".m.$wr;
+		$stop = explode('sufficient funds',$wr)[1];
+		if($stop){
+			print n;
+			return [$number => "sufficient funds"];
+		}
+		sleep(3);
+		print "\r                  \r";
+	}else{
+		print k."Gagal Claim";
+		sleep(3);
+		print "\r                  \r";
+	}
+	return [$number => "mantap"];
+}
+function config(){
+	simpan("Cookie");
+	simpan("User_Agent");
+}
+function h($data=0){
+	$h[] = "user-agent: ".simpan("User_Agent");
+	$h[] = "cookie: ".simpan("Cookie");
+	return $h;
+}
+
+try {
+	StartBot();
+}
+catch (Exception $e){
+	exit;
+}
